@@ -1,16 +1,19 @@
 import SQLite, {ResultSet, Transaction} from 'react-native-sqlite-storage';
-import {definition, Searchable} from './dbtype';
+import {Collection, definition, Fillable, Searchable} from './dbtype';
 
 SQLite.DEBUG(true);
 SQLite.enablePromise(true);
 
-export default abstract class Database {
+export default abstract class Database<
+  T extends Collection,
+  X extends Fillable,
+> {
   protected db: SQLite.SQLiteDatabase | null = null;
   protected table: string = '';
   protected sql: string = '';
   protected params: any[] = [];
   protected searchable: Searchable = ['name', 'id'];
-  protected definition: definition = {id: 'TEXT PRIMARY KEY NOT NULL'};
+  protected definition: definition = {id: 'INTEGER PRIMARY KEY '};
 
   constructor() {
     this.init();
@@ -18,7 +21,10 @@ export default abstract class Database {
 
   protected async openDatabase(): Promise<SQLite.SQLiteDatabase> {
     if (this.db === null) {
-      this.db = await SQLite.openDatabase({name: 'kasir', location: 'default'});
+      this.db = await SQLite.openDatabase({
+        name: 'oktaax_cashier',
+        location: 'default',
+      });
     }
     return this.db;
   }
@@ -53,7 +59,7 @@ export default abstract class Database {
     this.params = [];
   }
 
-  public async first(): Promise<object | null> {
+  public async first(): Promise<T | null> {
     const [result] = await this.get();
     return result || null;
   }
@@ -69,29 +75,41 @@ export default abstract class Database {
     return this;
   }
 
-  public async insert(columns: string[], values: any[]): Promise<ResultSet[]> {
+  public async insert(Fillable: X): Promise<ResultSet[]> {
+    const columns = Object.keys(Fillable);
     const columnsStr = columns.join(', ');
     const valuesPlaceholder = columns.map(() => '?').join(', ');
+
+    const values = Object.values(Fillable);
+
     this.sql = `INSERT INTO ${this.table} (${columnsStr}) VALUES (${valuesPlaceholder})`;
     this.params = values;
     const result = await this.query();
     return result;
   }
 
-  public async get(): Promise<any[]> {
+  public async get(): Promise<T[]> {
     const result = await this.query();
     const rows = result[0].rows;
-    const data: any[] = [];
+    const data: T[] = [];
     for (let i = 0; i < rows.length; i++) {
       data.push(rows.item(i));
     }
     return data;
   }
-  async search(q: string): Promise<ResultSet[]> {
+  public async search(q: string): Promise<T[] | undefined> {
     const search = this.searchable.map(item => `LIKE ? `).join(' OR ');
     this.params = this.searchable.map(item => `%${q}%`);
     this.sql = `SELECT * FROM ${this.table} WHERE ${search}`;
-    return await this.query();
+
+    const data: T[] = [];
+    const result = await this.query();
+    const rows = result[0].rows;
+    for (let i = 0; i < rows.length; i++) {
+      data.push(rows.item(i));
+    }
+
+    return data;
   }
 
   public async isEmpty(): Promise<boolean> {
