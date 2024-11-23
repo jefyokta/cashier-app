@@ -1,7 +1,7 @@
 import Database from '../../database';
 import {definition} from '../../database/dbtype';
 
-export class Transactions extends Database<Transaction, FillableTransaction> {
+export class Transactions extends Database<TransactionCollection, FillableTransaction> {
   protected table: string = 'transactions';
   protected definition: definition = {
     id: 'INTEGER PRIMARY KEY ',
@@ -11,7 +11,7 @@ export class Transactions extends Database<Transaction, FillableTransaction> {
   };
 }
 
-export type Transaction = {
+export type TransactionCollection = {
   id: string;
   gross_amount: number;
   status: number;

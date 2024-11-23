@@ -1,7 +1,7 @@
 import Database from '../../database';
 import {definition} from '../../database/dbtype';
 
-export class Products extends Database<Product, FillableProduct> {
+export class Products extends Database<ProductCollection, FillableProduct> {
   protected table: string = 'products';
   protected definition: definition = {
     id: 'INTEGER PRIMARY KEY ',
@@ -13,7 +13,7 @@ export class Products extends Database<Product, FillableProduct> {
   protected searchable: [string, ...any[]] = ['name', 'price'];
 }
 
-export type Product = {
+export type ProductCollection = {
   id: string;
   name: string;
   barcode: string;

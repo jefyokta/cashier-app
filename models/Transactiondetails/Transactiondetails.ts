@@ -2,7 +2,7 @@ import Database  from "../../database";
 import { definition } from "../../database/dbtype";
 
 export class Transactiondetails extends Database<
-  Transactiondetail,
+  TransactiondetailCollection,
   FillableTransactionDetails
 > {
   protected table: string = 'transaction_details';
@@ -14,7 +14,7 @@ export class Transactiondetails extends Database<
 }
 
 
-export type Transactiondetail= {
+export type TransactiondetailCollection= {
     id: string,
     transaction_id:string,
     product_id:string

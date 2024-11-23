@@ -11,5 +11,5 @@ export interface Collection{
 }
 
 export interface Fillable {
-  [key:string,value:any]
+  [key:string]:any
 }

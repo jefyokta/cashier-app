@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RootStackParamlist } from '../../../../App'
 import { GradientContainer } from '../../../Components/Container'
 import { Input } from '../../../Components/Input'
 import { CustomButton } from '../../../Components/Button/Buttons'
-type SplashScreenNavigationProp = NativeStackNavigationProp<RootStackParamlist, 'splash'>;
+import { NavigationProp } from '../../../../App'
+
 export const Merchant = () => {
 
-    const navigation = useNavigation<SplashScreenNavigationProp>()
+    const navigation = useNavigation<NavigationProp<"splash">>()
     return (
         <GradientContainer >
             <View className='' style={{ width: "100%" }}>
@@ -24,12 +24,10 @@ export const Merchant = () => {
                     </View>
                 </View>
                 <View className=' flex justify-end items-center' >
-                    <CustomButton text='Next' onPress={() => navigation.navigate('starter', { username: 'jefy' })} btnColor='primary'>
-
-                    </CustomButton>
-                    {/* <TouchableOpacity onPress={() => navigation.navigate('splash')} className='px-3 py-3 mx-3 rounded-lg flex justify-center mb-10 bg-cyan-600 w-10/12  '>
+                   
+                    <TouchableOpacity onPress={() => navigation.navigate('dashboard')} className='px-3 py-3 mx-3 rounded-lg flex justify-center mb-10 bg-cyan-600 w-10/12  '>
                         <Text className='text-white text-center'>Next</Text>
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                 </View>
             </View>
         </GradientContainer>

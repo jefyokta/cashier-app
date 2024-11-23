@@ -8,6 +8,7 @@ const config = {
       : `${DocumentDirectoryPath}/Images`,
   androidDirPath: DocumentDirectoryPath,
   imgUrlAndroid: `${DocumentDirectoryPath}/Images`,
+  
 };
 
 export default config;
